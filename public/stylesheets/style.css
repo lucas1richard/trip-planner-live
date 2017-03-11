@@ -117,8 +117,7 @@ h3 {
   .panel-default .panel-body {
     padding: 5px 15px; }
     .panel-default .panel-body > div {
-      margin-top: 20px;
-      margin-bottom: 20px; }
+       }
 
 .itinerary-item {
   margin: 8px 0; }
@@ -129,6 +128,9 @@ h3 {
     width: calc(100% - 24px); }
   .itinerary-item > .remove {
     width: 20px; }
+  .itinerary-item+.itinerary-item {
+    margin-top:0px!important;
+  }
 
 #day-title {
   display: inline-block;
