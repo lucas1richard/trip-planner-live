@@ -16,7 +16,7 @@
 
   function dayPicker(mainContainerId, titleContainerId, days, dayIndex, dayClick) {
     $(mainContainerId).empty();
-    let $div = $('<div>');
+    let $div = $('<div style="display: inline-block">');
     days = days.map((day, index) => {
       if (index === dayIndex) {
         return `<button class="btn btn-circle day-btn current-day">${index + 1}</button>`;
@@ -26,7 +26,12 @@
     $(titleContainerId).html(`Day ${dayIndex + 1} <button class="btn btn-xs btn-danger remove btn-circle">x</button>`);
     $div.append(days);
     $(mainContainerId).append($div);
+
+    $addDiv = $('<div style="display: inline-block; float: right;"><button data-action="add" class="btn btn-primary btn-circle pull-right">+</button></div>');
+    $(mainContainerId).append($addDiv);
+
     $div.on('click', 'button', dayClick);
+    $addDiv.on('click', 'button', addDay);
   }
 
   function onDayClick() {
@@ -35,27 +40,33 @@
     renderDayView();
   }
 
+  function addDay() {
+    state.days.push({ hotels: [], restaurants: [], activities: []});
+    renderDayPicker();
+    renderDayView();
+  }
+
   function dayView(containerId, day) {
     $(containerId).empty();
-    let hotelTitle = '<h4>My Hotels</h4>';
+    let hotelTitle = $('<div><h4>My Hotels</h4></div>');
     let _hotels = day.hotels.map(hotelIndex => {
           return `<div class="itinerary-item"><span class="title">${hotels[hotelIndex - 1].name}</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>`;
         }).join('');
-    let restaurantTitle = '<h4>My Restaurants</h4>'
+    let restaurantTitle = $('<div><h4>My Restaurants</h4></div>');
     let _restaurants = day.restaurants.map(restaurantIndex => {
           return `<div class="itinerary-item"><span class="title">${restaurants[restaurantIndex - 1].name}</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>`;
         }).join('');
-    let activityTitle = '<h4>My Activities</h4>'
+    let activityTitle = $('<div><h4>My Activities</h4></div>');
     let _activities = day.activities.map(activityIndex => {
           return `<div class="itinerary-item"><span class="title">${activities[activityIndex - 1].name}</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>`;
         }).join('');
 
     $(containerId).append(hotelTitle);
-    $(containerId).append(_hotels);
+    hotelTitle.append(_hotels);
     $(containerId).append(restaurantTitle);
-    $(containerId).append(_restaurants);
+    restaurantTitle.append(_restaurants);
     $(containerId).append(activityTitle);
-    $(containerId).append(_activities);
+    activityTitle.append(_activities);
   }
 
   function renderDayView() {
@@ -69,4 +80,58 @@
   renderDayPicker();
   renderDayView();
 
+  $('#day-title').on('click', 'button', function() {
+    state.days.splice(state.idx, 1);
+    if (state.idx >= state.days.length) state.idx = state.days.length - 1;
+    renderDayPicker();
+    renderDayView();
+  });
+
+  $('#options-panel').on('click', 'button', function() {
+    let $button = $(this);
+    let index = $(this).parent().index();
+
+    let $select = $button.prev();
+
+    switch (index) {
+      case 0: {
+        state.days[state.idx].hotels.push($select.val() * 1);
+        break;
+      }
+      case 1: {
+        state.days[state.idx].restaurants.push($select.val() * 1);
+        break;
+      }
+      case 2: {
+        state.days[state.idx].activities.push($select.val() * 1);
+        break;
+      }
+    }
+    renderDayView();
+  });
+
+  $('#itinerary').on('click', 'button', function() {
+    let $button = $(this);
+    let parentIndex = $button.parent().parent().index();
+    let param;
+    switch (parentIndex) {
+      case 0: {
+        param = 'hotels';
+        break;
+      }
+      case 1: {
+        param = 'restaurants';
+        break;
+      }
+      case 2: {
+        param = 'activities';
+        break;
+      }
+    }
+
+    let buttonIndex = $button.parent().index() - 1;
+
+    state.days[state.idx][param].splice(buttonIndex, 1);
+    renderDayView();
+  });
 })();
