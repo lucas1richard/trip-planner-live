@@ -15,16 +15,19 @@
   };
 
   function dayPicker(mainContainerId, titleContainerId, days, dayIndex, dayClick) {
+    $(mainContainerId).empty();
+    let $div = $('<div>');
     days = days.map((day, index) => {
       if (index === dayIndex) {
         return `<button class="btn btn-circle day-btn current-day">${index + 1}</button>`;
       }
       return `<button class="btn btn-circle day-btn">${index + 1}</button>`;
   }).join(' ');
-    $(mainContainerId).html(days);
     $(titleContainerId).html(`Day ${dayIndex + 1} <button class="btn btn-xs btn-danger remove btn-circle">x</button>`);
+    $div.append(days);
+    $(mainContainerId).append($div);
+    $div.on('click', 'button', dayClick);
   }
-    $('#dayPicker').on('click', 'button', onDayClick);
 
   function onDayClick() {
     state.idx = $(this).index();
