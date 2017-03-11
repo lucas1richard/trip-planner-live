@@ -1,4 +1,4 @@
-(function() {
+// (function() {
 
   let state = {
     idx: 0,
@@ -11,7 +11,26 @@
         restaurants: [2],
         activities: [3]
       }
-    ]
+    ],
+    markers: [],
+    setMarkers() {
+      let day = state.days[state.idx];
+      Object.keys(day).forEach(type => {
+        day[type].forEach(item => {
+          switch (type) {
+            case 'hotels': {
+              state.markers.push({type, location: hotels[item].place.location});
+            }
+            case 'restaurants': {
+              state.markers.push({type, location: restaurants[item].place.location});
+            }
+            case 'activities': {
+              state.markers.push({type, location: activities[item].place.location});
+            }
+          }
+        })
+      });
+    }
   };
 
   function dayPicker(mainContainerId, titleContainerId, days, dayIndex, dayClick) {
@@ -38,6 +57,9 @@
     state.idx = $(this).index();
     renderDayPicker();
     renderDayView();
+    clearMarkers();
+    state.setMarkers();
+    setMapOnAll();
   }
 
   function addDay() {
@@ -134,4 +156,19 @@
     state.days[state.idx][param].splice(buttonIndex, 1);
     renderDayView();
   });
-})();
+
+  function setMapOnAll() {
+    state.markers = state.markers.map(mark => {
+      mark = window.drawMarker(mark.type, mark.location);
+      return mark;
+    });
+  }
+
+  function clearMarkers() {
+    state.markers.forEach(mark => {
+      console.log(mark);
+      mark.setMap(null);
+    });
+    state.markers = [];
+  }
+// })();

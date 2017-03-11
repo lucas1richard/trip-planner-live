@@ -41,9 +41,9 @@ $(function initializeMap (){
   });
 
   var iconURLs = {
-    hotel: '/images/lodging_0star.png',
-    restaurant: '/images/restaurant.png',
-    activity: '/images/star-3.png'
+    hotels: '/images/lodging_0star.png',
+    restaurants: '/images/restaurant.png',
+    activities: '/images/star-3.png'
   };
 
   function drawMarker (type, coords) {
@@ -54,10 +54,12 @@ $(function initializeMap (){
       position: latLng
     });
     marker.setMap(currentMap);
+    return marker;
   }
 
-  drawMarker('hotel', [40.705137, -74.007624]);
-  drawMarker('restaurant', [40.705137, -74.013940]);
-  drawMarker('activity', [40.716291, -73.995315]);
+  // drawMarker('hotel', [40.705137, -74.007624]);
+  // drawMarker('restaurant', [40.705137, -74.013940]);
+  // drawMarker('activity', [40.716291, -73.995315]);
 
+  window.drawMarker = drawMarker;
 });
