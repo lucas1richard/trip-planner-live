@@ -23,11 +23,10 @@
   }).join(' ');
     $(mainContainerId).html(days);
     $(titleContainerId).html(`Day ${dayIndex + 1} <button class="btn btn-xs btn-danger remove btn-circle">x</button>`);
-    $(mainContainerId).on('click', 'button', dayClick);
   }
+    $('#dayPicker').on('click', 'button', onDayClick);
 
   function onDayClick() {
-    console.log($(this).index());
     state.idx = $(this).index();
     renderDayPicker();
     renderDayView();
